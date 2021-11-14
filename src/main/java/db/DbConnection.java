@@ -1,4 +1,4 @@
-package dbConnection;
+package db;
 
 import constants.DbConstants;
 
@@ -21,10 +21,14 @@ public class DbConnection {
     public DbConnection() {
     }
 
-    public Connection getConnection() throws SQLException {
-        if (connection==null){
-            connection = DriverManager.getConnection(url,user,password);
+    public Connection getConnection() {
+        try {
+            if (connection == null) {
+                connection = DriverManager.getConnection(url, user, password);
+            }
+            return connection;
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
         }
-        return connection;
     }
 }
