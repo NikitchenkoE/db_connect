@@ -18,45 +18,45 @@ class QueryHandlerTest {
 
     @BeforeEach
     void initTable() {
-        queryHandler.ddlQueryProcessor(SqlQueries.CREATE_TABLE_BEFORE);
+        queryHandler.updateCommandHandler(SqlQueries.CREATE_TABLE_BEFORE);
     }
 
     @AfterEach
     void clean() {
-        queryHandler.ddlQueryProcessor(SqlQueries.DROP_TABLE_BEFORE);
+        queryHandler.updateCommandHandler(SqlQueries.DROP_TABLE_BEFORE);
     }
 
     @Test
     void testDdlQueryCreateTable() {
         String query = SqlQueries.CREATE_TABLE_PERSONS;
-        int result = queryHandler.ddlQueryProcessor(query);
+        int result = queryHandler.updateCommandHandler(query);
         assertEquals(0, result);
     }
 
     @Test
     void testDdlQueryDropTable() {
-        queryHandler.ddlQueryProcessor(SqlQueries.CREATE_TABLE_PERSONS);
-        queryHandler.ddlQueryProcessor(SqlQueries.DROP_TABLE_PERSONS);
+        queryHandler.updateCommandHandler(SqlQueries.CREATE_TABLE_PERSONS);
+        queryHandler.updateCommandHandler(SqlQueries.DROP_TABLE_PERSONS);
     }
 
     @Test
     void testDdlQueryInsertIntoReturnNumberOfChangedLines() {
-        var result = queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
-        var result2 = queryHandler.ddlQueryProcessor("INSERT INTO Before VALUES (3, 'Lavrov')");
+        var result = queryHandler.updateCommandHandler(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+        var result2 = queryHandler.updateCommandHandler("INSERT INTO Before VALUES (3, 'Lavrov')");
         assertEquals(2, result);
         assertEquals(1, result2);
     }
 
     @Test
     void testDdlQueryDropTableCustom() {
-        queryHandlerCustom.ddlQueryProcessor(SqlQueries.CREATE_TABLE_PERSONS);
-        queryHandlerCustom.ddlQueryProcessor(SqlQueries.DROP_TABLE_PERSONS);
+        queryHandlerCustom.updateCommandHandler(SqlQueries.CREATE_TABLE_PERSONS);
+        queryHandlerCustom.updateCommandHandler(SqlQueries.DROP_TABLE_PERSONS);
     }
 
     @Test
     void testDmlSelect() {
-        queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
-        var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before");
+        queryHandler.updateCommandHandler(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+        var result = queryHandler.selectCommandHandler("SELECT * FROM Before");
         String expected = "[PERSONID=[1, 2], LASTNAME=[Fedorov, Nikitchenko]]";
         String actual = result.toString();
 
@@ -65,8 +65,8 @@ class QueryHandlerTest {
 
     @Test
     void testDmlSelectWHERE() {
-        queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
-        var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before WHERE LASTNAME = 'Fedorov'");
+        queryHandler.updateCommandHandler(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+        var result = queryHandler.selectCommandHandler("SELECT * FROM Before WHERE LASTNAME = 'Fedorov'");
         String expected = "[PERSONID=[1], LASTNAME=[Fedorov]]";
         String actual = result.toString();
         assertEquals(expected, actual);
@@ -74,10 +74,28 @@ class QueryHandlerTest {
 
     @Test
     void selectFromEmptyTable() {
-        var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before");
+        var result = queryHandler.selectCommandHandler("SELECT * FROM Before");
         String expected = "[PERSONID=[], LASTNAME=[]]";
         String actual = result.toString();
 
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testAlterTable(){
+        var result = queryHandler.updateCommandHandler(SqlQueries.ALTER_TABLE_BEFORE);
+        var expected = 0;
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void testRenameTable() {
+        queryHandler.updateCommandHandler(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+        queryHandler.updateCommandHandler(SqlQueries.RENAME_TABLE_BEFORE);
+        var result = queryHandler.selectCommandHandler("SELECT * FROM new_table_name WHERE LASTNAME = 'Fedorov'");
+        queryHandler.updateCommandHandler(SqlQueries.RENAME_TABLE_BACK);
+        String expected = "[PERSONID=[1], LASTNAME=[Fedorov]]";
+        String actual = result.toString();
         assertEquals(expected, actual);
     }
 

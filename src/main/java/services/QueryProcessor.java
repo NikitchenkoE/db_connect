@@ -2,7 +2,6 @@ package services;
 
 import db.DataSource;
 import db.QueryHandler;
-import entity.DmlQuery;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
@@ -17,26 +16,17 @@ public class QueryProcessor {
         this.dataSource = dataSource;
     }
 
-    public Object getResult(String query) {
+    public Object processQuery(String query) {
         QueryHandler queryHandler = new QueryHandler(dataSource.getDataSource());
         log.info(query);
         String[] wordsFromQuery = patternDeleteSpaces.split(query);
         String commandFromQuery = wordsFromQuery[0];
-        if (isDml(commandFromQuery)) {
-            return queryHandler.dmlQueryProcessor(query);
+        if (commandFromQuery.equals("SELECT")) {
+            return queryHandler.selectCommandHandler(query);
         } else {
-            return queryHandler.ddlQueryProcessor(query);
+            return queryHandler.updateCommandHandler(query);
         }
     }
 
-    private boolean isDml(String commandFromQuery) {
-        DmlQuery[] valuesDml = DmlQuery.values();
-        boolean result = false;
-        for (DmlQuery dmlQuery : valuesDml) {
-            if (dmlQuery.toString().equals(commandFromQuery)) {
-                result = true;
-            }
-        }
-        return result;
-    }
+
 }

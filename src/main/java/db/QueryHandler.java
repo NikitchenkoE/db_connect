@@ -15,7 +15,7 @@ public class QueryHandler {
         this.dataSource = dataSource;
     }
 
-    public int ddlQueryProcessor(String query) {
+    public int updateCommandHandler(String query) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             return statement.executeUpdate(query);
@@ -24,7 +24,7 @@ public class QueryHandler {
         }
     }
 
-    public List<QueryResult> dmlQueryProcessor(String query) {
+    public List<QueryResult> selectCommandHandler(String query) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
