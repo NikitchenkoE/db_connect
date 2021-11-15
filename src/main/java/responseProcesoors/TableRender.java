@@ -20,9 +20,9 @@ public class TableRender {
         asciiTable.addRule();
         asciiTable.addRow(getColumnNames());
         asciiTable.addRule();
-        while (currentSize<size){
-         asciiTable.addRow(getRows());
-         asciiTable.addRule();
+        while (currentSize < size) {
+            asciiTable.addRow(getRows());
+            asciiTable.addRule();
         }
         return asciiTable.render();
     }

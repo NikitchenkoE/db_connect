@@ -4,6 +4,7 @@ import db.DataSource;
 import db.QueryHandler;
 import entity.QueryResult;
 import lombok.extern.slf4j.Slf4j;
+import responseProcesoors.HtmlRender;
 import responseProcesoors.TableRender;
 
 import java.util.List;
@@ -25,12 +26,21 @@ public class QueryProcessor {
         String[] wordsFromQuery = patternDeleteSpaces.split(query);
         String commandFromQuery = wordsFromQuery[0];
         if (commandFromQuery.equals("SELECT")) {
-            List<QueryResult> queryResults = queryHandler.selectCommandHandler(query);
-            TableRender tableRender = new TableRender(queryResults);
-            return tableRender.renderTable();
+            return selectCommand(queryHandler, query);
         } else {
             return queryHandler.updateCommandHandler(query);
         }
+    }
+
+    private String selectCommand(QueryHandler queryHandler, String query) {
+        List<QueryResult> queryResults = queryHandler.selectCommandHandler(query);
+        TableRender tableRender = new TableRender(queryResults);
+        HtmlRender htmlRender = new HtmlRender(queryResults);
+        String renderedTable = tableRender.renderTable();
+        String pathToFile = htmlRender.renderHtmlTable();
+        String messageToClient = String.format("Path to file with query result in html format by path - %s", pathToFile);
+
+        return renderedTable.concat("\n").concat(messageToClient);
     }
 
 

@@ -3,8 +3,8 @@ package entity;
 import java.util.List;
 
 public class QueryResult {
-    private String columnName;
-    private List<Object> rows;
+    private final String columnName;
+    private final List<Object> rows;
 
     public QueryResult(String columnName, List<Object> rows) {
         this.columnName = columnName;
@@ -21,6 +21,6 @@ public class QueryResult {
 
     @Override
     public String toString() {
-        return columnName + "=" +rows.toString();
+        return columnName + "=" + rows.toString();
     }
 }
