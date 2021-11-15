@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ConnectionTest {
 
 
-    DbConnection defaultConnection = new DbConnection();
+    DataSource defaultConnection = new DataSource();
 
     @Test
     void createConnectionDefault() throws SQLException {
-        try(Connection connection = defaultConnection.getConnection()) {
+        try(Connection connection = defaultConnection.getDataSource().getConnection()) {
             assertTrue(connection.isValid(1));
             assertFalse(connection.isClosed());
         }
@@ -26,9 +26,9 @@ public class ConnectionTest {
         String url ="jdbc:postgresql:postgreDb";
         String user = "userPg";
         String password ="userPg";
-        DbConnection customConnection = new DbConnection(url,user,password);
+        DataSource dataSource = new DataSource(url,user,password);
 
-        try(Connection connection = customConnection.getConnection()) {
+        try(Connection connection = dataSource.getDataSource().getConnection()) {
             assertTrue(connection.isValid(1));
             assertFalse(connection.isClosed());
         }

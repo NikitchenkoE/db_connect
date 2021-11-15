@@ -11,10 +11,10 @@ class QueryHandlerTest {
     String url = "jdbc:postgresql:postgreDb";
     String user = "userPg";
     String password = "userPg";
-    DbConnection customConnection = new DbConnection(url, user, password);
-    QueryHandler queryHandlerCustom = new QueryHandler(customConnection.getConnection());
-    DbConnection connection = new DbConnection();
-    QueryHandler queryHandler = new QueryHandler(connection.getConnection());
+    DataSource customDataSource = new DataSource(url, user, password);
+    QueryHandler queryHandlerCustom = new QueryHandler(customDataSource.getDataSource());
+    DataSource dataSource = new DataSource();
+    QueryHandler queryHandler = new QueryHandler(dataSource.getDataSource());
 
     @BeforeEach
     void initTable() {
