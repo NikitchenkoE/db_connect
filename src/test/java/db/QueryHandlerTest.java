@@ -42,6 +42,14 @@ class QueryHandlerTest {
     }
 
     @Test
+    void testDdlQueryInsertIntoReturnNumberOfChangedLines(){
+       var result =  queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+       var result2 = queryHandler.ddlQueryProcessor("INSERT INTO Before VALUES (3, 'Lavrov')");
+       assertEquals(2,result);
+       assertEquals(1,result2);
+    }
+
+    @Test
     void testDdlQueryDropTableCustom() {
         queryHandlerCustom.ddlQueryProcessor(SqlQueries.CREATE_TABLE_PERSONS);
         queryHandlerCustom.ddlQueryProcessor(SqlQueries.DROP_TABLE_PERSONS);
