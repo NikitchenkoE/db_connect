@@ -1,10 +1,11 @@
 package db;
 
+import entity.QueryResult;
+import lombok.SneakyThrows;
+
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QueryHandler {
     private final Connection connection;
@@ -21,9 +22,9 @@ public class QueryHandler {
         }
     }
 
-    public Map<String, List<String>> dmlQueryProcessor(String query) {
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
+    public List<QueryResult> dmlQueryProcessor(String query) {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             List<String> columnNames = getColumnNames(metaData);
 
@@ -33,31 +34,33 @@ public class QueryHandler {
         }
     }
 
-    private Map<String, List<String>> getResult(ResultSet resultSet, List<String> columnNames) throws SQLException {
-        Map<String, List<String>> result = new HashMap<>();
+    @SneakyThrows
+    private List<QueryResult> getResult(ResultSet resultSet, List<String> columnNames){
+        List<QueryResult> result = new ArrayList<>();
+        for (String columnName : columnNames) {
+            result.add(new QueryResult(columnName, new ArrayList<>()));
+        }
         while (resultSet.next()) {
             for (String columnName : columnNames) {
-                if (!result.containsKey(columnName)) {
-                    result.put(columnName, new ArrayList<>());
+                for (QueryResult thisQueryResult : result) {
+                    if (thisQueryResult.getColumnName().equals(columnName)) {
+                        thisQueryResult.getRows().add(resultSet.getObject(columnName));
+                    }
                 }
-                result.get(columnName).add(resultSet.getString(columnName));
-            }
-        }
-        if (result.size() == 0) {
-            for (String columnName : columnNames) {
-                result.put(columnName, new ArrayList<>());
             }
         }
 
         return result;
     }
 
-    private List<String> getColumnNames(ResultSetMetaData metaData) throws SQLException {
+    @SneakyThrows
+    private List<String> getColumnNames(ResultSetMetaData metaData){
         List<String> columns = new ArrayList<>();
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             columns.add(metaData.getColumnName(i));
         }
         return columns;
     }
+
 
 }

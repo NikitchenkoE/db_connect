@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class QueryHandlerTest {
@@ -29,7 +27,7 @@ class QueryHandlerTest {
     }
 
     @Test
-    void testDdlQueryCreateTable() throws SQLException {
+    void testDdlQueryCreateTable() {
         String query = SqlQueries.CREATE_TABLE_PERSONS;
         int result = queryHandler.ddlQueryProcessor(query);
         assertEquals(0, result);
@@ -42,11 +40,11 @@ class QueryHandlerTest {
     }
 
     @Test
-    void testDdlQueryInsertIntoReturnNumberOfChangedLines(){
-       var result =  queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
-       var result2 = queryHandler.ddlQueryProcessor("INSERT INTO Before VALUES (3, 'Lavrov')");
-       assertEquals(2,result);
-       assertEquals(1,result2);
+    void testDdlQueryInsertIntoReturnNumberOfChangedLines() {
+        var result = queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
+        var result2 = queryHandler.ddlQueryProcessor("INSERT INTO Before VALUES (3, 'Lavrov')");
+        assertEquals(2, result);
+        assertEquals(1, result2);
     }
 
     @Test
@@ -59,7 +57,7 @@ class QueryHandlerTest {
     void testDmlSelect() {
         queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
         var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before");
-        String expected = "{PERSONID=[1, 2], LASTNAME=[Fedorov, Nikitchenko]}";
+        String expected = "[PERSONID=[1, 2], LASTNAME=[Fedorov, Nikitchenko]]";
         String actual = result.toString();
 
         assertEquals(expected, actual);
@@ -69,7 +67,7 @@ class QueryHandlerTest {
     void testDmlSelectWHERE() {
         queryHandler.ddlQueryProcessor(SqlQueries.INSERT_INTO_BEFORE_TABLE);
         var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before WHERE LASTNAME = 'Fedorov'");
-        String expected = "{PERSONID=[1], LASTNAME=[Fedorov]}";
+        String expected = "[PERSONID=[1], LASTNAME=[Fedorov]]";
         String actual = result.toString();
         assertEquals(expected, actual);
     }
@@ -77,7 +75,7 @@ class QueryHandlerTest {
     @Test
     void selectFromEmptyTable() {
         var result = queryHandler.dmlQueryProcessor("SELECT * FROM Before");
-        String expected = "{PERSONID=[], LASTNAME=[]}";
+        String expected = "[PERSONID=[], LASTNAME=[]]";
         String actual = result.toString();
 
         assertEquals(expected, actual);
