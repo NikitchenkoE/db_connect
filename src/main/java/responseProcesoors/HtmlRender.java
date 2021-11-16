@@ -23,16 +23,15 @@ public class HtmlRender {
 
     public String renderHtmlTable() {
         StringJoiner stringJoiner = new StringJoiner("\n");
-        stringJoiner.add(DbConstants.htmlFile);
+        stringJoiner.add(DbConstants.HTML_HEAD);
+
         stringJoiner.add(getColumnNames());
         while (currentSize < size) {
             stringJoiner.add(getRows());
         }
-        stringJoiner.add("</table>");
-        stringJoiner.add("</body>");
-        stringJoiner.add("</html>");
+        stringJoiner.add(DbConstants.HTML_FOOT);
 
-        return save("src/main/resources/results", stringJoiner.toString());
+        return stringJoiner.toString();
     }
 
     private String getColumnNames() {
@@ -63,19 +62,5 @@ public class HtmlRender {
         currentSize++;
 
         return stringJoiner.toString();
-    }
-
-    private String save(String path, String content) {
-        Timestamp ts = Timestamp.from(Instant.now());
-        var partOfFileName = ts.getTime();
-        String fileName = partOfFileName + ".html";
-        File file = new File(path, fileName);
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(content);
-            fileWriter.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return file.getAbsolutePath();
     }
 }

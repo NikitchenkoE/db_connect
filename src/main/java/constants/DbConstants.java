@@ -5,7 +5,7 @@ public interface DbConstants {
     String DEFAULT_USER = "user";
     String DEFAULT_PASSWORD = "password";
 
-    String htmlFile = "<!DOCTYPE html>\n" +
+    String HTML_HEAD = "<!DOCTYPE html>\n" +
             "<html lang=\"en\">\n" +
             "<head>\n" +
             "    <meta charset=\"UTF-8\">\n" +
@@ -13,5 +13,9 @@ public interface DbConstants {
             "</head>\n" +
             "<body>\n" +
             "<table>\n";
+
+    String HTML_FOOT = "</table>\n" +
+            "</body>\n" +
+            "</html>";
 
 }

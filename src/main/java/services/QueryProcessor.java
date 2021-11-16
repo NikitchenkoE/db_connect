@@ -4,6 +4,7 @@ import db.DataSource;
 import db.QueryHandler;
 import entity.QueryResult;
 import lombok.extern.slf4j.Slf4j;
+import responseProcesoors.FileSaver;
 import responseProcesoors.HtmlRender;
 import responseProcesoors.TableRender;
 
@@ -36,8 +37,10 @@ public class QueryProcessor {
         List<QueryResult> queryResults = queryHandler.selectCommandHandler(query);
         TableRender tableRender = new TableRender(queryResults);
         HtmlRender htmlRender = new HtmlRender(queryResults);
+        FileSaver fileSaver = new FileSaver();
         String renderedTable = tableRender.renderTable();
-        String pathToFile = htmlRender.renderHtmlTable();
+        String content = htmlRender.renderHtmlTable();
+        String pathToFile = fileSaver.save("src/main/resources/results", content);
         String messageToClient = String.format("Path to file with query result in html format by path - %s", pathToFile);
 
         return renderedTable.concat("\n").concat(messageToClient);
