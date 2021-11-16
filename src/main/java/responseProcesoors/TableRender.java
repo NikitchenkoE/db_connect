@@ -31,7 +31,7 @@ public class TableRender {
         List<String> columnNames = new ArrayList<>();
         for (QueryResult queryResult : queryResultList) {
             columnNames.add(queryResult.getColumnName());
-            size = queryResult.getRows().size();
+            size = queryResult.getValues().size();
         }
         return columnNames;
     }
@@ -39,7 +39,7 @@ public class TableRender {
     private List<Object> getRows() {
         List<List<Object>> rowsLists = new ArrayList<>();
         for (QueryResult queryResult : queryResultList) {
-            rowsLists.add(queryResult.getRows());
+            rowsLists.add(queryResult.getValues());
         }
         List<Object> row = new ArrayList<>();
 

@@ -47,7 +47,7 @@ public class QueryHandler {
             for (String columnName : columnNames) {
                 for (QueryResult thisQueryResult : result) {
                     if (thisQueryResult.getColumnName().equals(columnName)) {
-                        thisQueryResult.getRows().add(resultSet.getObject(columnName));
+                        thisQueryResult.getValues().add(resultSet.getObject(columnName));
                     }
                 }
             }

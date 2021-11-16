@@ -40,7 +40,7 @@ public class HtmlRender {
         stringJoiner.add("<tr>");
         for (QueryResult queryResult : queryResultList) {
             stringJoiner.add(String.format("<th>%s</th>", queryResult.getColumnName()));
-            size = queryResult.getRows().size();
+            size = queryResult.getValues().size();
         }
         stringJoiner.add("</tr>");
         return stringJoiner.toString();
@@ -50,7 +50,7 @@ public class HtmlRender {
         StringJoiner stringJoiner = new StringJoiner("\n");
         List<List<Object>> rowsLists = new ArrayList<>();
         for (QueryResult queryResult : queryResultList) {
-            rowsLists.add(queryResult.getRows());
+            rowsLists.add(queryResult.getValues());
         }
         List<Object> row = new ArrayList<>();
 

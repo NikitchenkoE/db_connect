@@ -4,23 +4,23 @@ import java.util.List;
 
 public class QueryResult {
     private final String columnName;
-    private final List<Object> rows;
+    private final List<Object> values;
 
     public QueryResult(String columnName, List<Object> rows) {
         this.columnName = columnName;
-        this.rows = rows;
+        this.values = rows;
     }
 
     public String getColumnName() {
         return columnName;
     }
 
-    public List<Object> getRows() {
-        return rows;
+    public List<Object> getValues() {
+        return values;
     }
 
     @Override
     public String toString() {
-        return columnName + "=" + rows.toString();
+        return columnName + "=" + values.toString();
     }
 }
